@@ -1,0 +1,53 @@
+- kubernetes is a orchestration tools.
+
+- kubernetes cluster installation have 2 segment 
+1. control plane : that manage all kubernetes services. that know as master node 
+2. worker nodes : that use for run pods that instruction manage by control plane 
+
+- kubernetes key components 
+1. api server :::: The API server is a component of the Kubernetes control plane that exposes the Kubernetes API. 
+The API server is the front end for the Kubernetes control plane. when we pass kubectl command instaruction that accept by api server.
+
+2. etcd :::: Consistent and highly-available key value store used as Kubernetes' backing store for all cluster data.
+If your Kubernetes cluster uses etcd as its backing store, make sure you have a back up plan for the data.
+
+3. scheduler :::: Control plane component that watches for newly created Pods with no assigned node, and selects a node for them to run on.
+
+4. controller manger / cloud controll manger :::: 
+Control plane component that runs controller processes.
+
+Logically, each controller is a separate process, but to reduce complexity, they are all compiled into a single binary and run in a single process.
+
+There are many different types of controllers. Some examples of them are:
+
+Node controller: Responsible for noticing and responding when nodes go down.
+Job controller: Watches for Job objects that represent one-off tasks, then creates Pods to run those tasks to completion.
+EndpointSlice controller: Populates EndpointSlice objects (to provide a link between Services and Pods).
+ServiceAccount controller: Create default ServiceAccounts for new namespaces.
+
+5. kubelet ::: 
+An agent that runs on each node in the cluster. It makes sure that containers are running in a Pod.
+The kubelet takes a set of PodSpecs that are provided through various mechanisms and ensures that the containers described 
+in those PodSpecs are running and healthy. 
+The kubelet doesn't manage containers which were not created by Kubernetes.
+
+6. Kube-proxy ::: kube-proxy is a network proxy that runs on each node in your cluster, 
+implementing part of the Kubernetes Service concept.
+kube-proxy maintains network rules on nodes. These network rules allow network communication to your Pods 
+from network sessions inside or outside of your cluster.
+kube-proxy uses the operating system packet filtering layer if there is one and it's available. 
+Otherwise, kube-proxy forwards the traffic itself.
+
+kuberenetes intallation type 
+1. Minitkube Setup :::: single node developement setup 
+2. Kind Cluster :::: multi node production setup 
+3. k3s :::: Racncher providided lightweight kubernetes setup 
+4  Openshift ::: redhat provided kubenretes production cluster 
+
+
+Minikube installation in Windows::: 
+https://minikube.sigs.k8s.io/docs/start/?arch=%2Fwindows%2Fx86-64%2Fstable%2Fwindows+package+manager
+
+in Linux :::: https://highskyit.com/install-kubernetes-minikube-cluster-in-linux/
+kubectl installation is also availabel there. 
+https://kubernetes.io/docs/tasks/tools/install-kubectl-windows/
