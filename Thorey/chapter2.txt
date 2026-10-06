@@ -1,0 +1,30 @@
+namespace :::: 
+- namespaces provide a mechanism for isolating groups of resources within a single cluster.
+- Names of resources need to be unique within a namespace, but not across namespaces. 
+- Namespace-based scoping is applicable only for namespaced objects (e.g. Deployments, Services, etc.) and not for cluster-wide objects (e.g. StorageClass, Nodes, PersistentVolumes, etc.).
+
+# kubectl.exe get ns 
+NAME              STATUS   AGE
+default           Active   23h
+kube-node-lease   Active   23h
+kube-public       Active   23h
+kube-system       Active   23h
+
+#kubectl.exe create namespace test
+
+# kubectl.exe delete  namespace test
+
+kubernetes pod :::: Pods are the smallest deployable units of computing that you can create and manage in Kubernetes.
+
+A Pod (as in a pod of whales or pea pod) is a group of one or more containers, with shared storage and network resources, and a specification for how to run the containers.
+ A Pod's contents are always co-located and co-scheduled, and run in a shared context. 
+ 
+# kubectl.exe get pod -A
+
+# kubectl get pod -n nsname
+
+# kubectl.exe run -n test hazzale --image=nginx:latest --port=80 
+
+# kubectl.exe exec -it -n test hazzale -- bash 
+
+#  kubectl.exe expose pod hazzale --type=NodePort -n test
