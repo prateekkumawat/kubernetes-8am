@@ -1,0 +1,34 @@
+kubernetes support two method 
+1. Imperative Method ::: use for manageing or troubleshoot purpose used command line method
+2. Decelerative method :::: collection of yaml used for implementation purpose 
+
+kubernetes using yaml templates for resourece createion purpose. 
+
+apiVersion: v1              ### ----> kubernetes api versions apps/v1 networking storage authorizations related 
+kind: Pod                   ### ---> define your resoureces 
+metadata:                   ### ---> information about your resources like name namespace and labesls 
+  name: myapp
+  labels:
+    app.kubernetes.io/name: myapp
+spec:                       ### specification container volumes tolerations and affinity and multiple things 
+  containers:               ### any specific details regrad's containers 
+  - name: myapp
+    image: <Image>
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    ports:
+      - containerPort: <Port>
+
+https://github.com/derailed/k9s install this
+
+kubernetes servcices ::: Expose an application running in your cluster behind a single outward-facing endpoint, 
+even when the workload is split across multiple backends.
+type ::: ClusterIP Exposes the Service on a cluster-internal IP. Choosing this value makes the Service only reachable from within the cluster
+NodePort :::: Exposes the Service on each Node's IP at a static port (the NodePort). To make the node port available, 30000-32767
+Loadbalancer ::: Exposes the Service externally using an external load balancer. Kubernetes does not directly offer a load balancing component;
+ you must provide one, or you can integrate your Kubernetes cluster with a cloud provider.
+ ExternalName
+Maps the Service to the contents of the externalName field (for example, to the hostname api.foo.bar.example). 
+The mapping configures your cluster's DNS server to return a CNAME record with that external hostname value
