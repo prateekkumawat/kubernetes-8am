@@ -1,0 +1,8 @@
+kubernetes deployment create 
+# kubectl.exe create deployment nginx --image=nginx:latest --port=80
+
+Deployment ::::::
+- A Deployment manages a set of Pods to run an application workload, usually one that doesn't maintain state
+- deployment provide desire no of  pod and maintain workload 
+- deployment provide scaleabliety to application 
+- deployment provide to change and update your existing application

@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hog
+spec:
+  selector:
+    matchLabels:
+      app: hog
+  template:
+    metadata:
+      labels:
+        app: hog
+    spec:
+      containers:
+      - name: hog
+        image: vish/stress
+        restartPolicy: Always
+        resources:
+          requests:
+            memory: "2000Mi"
+            cpu : "1"
+          limits:
+            memory: "4000Mi"
+            cpu: "2"
+        args:
+        - -cpus
+        - "4"
+        - -mem-total
+        - "4000Mi"
+        - -mem-alloc-size
+        - "4000Mi"
+        - -mem-alloc-sleep
+        - "1s"
