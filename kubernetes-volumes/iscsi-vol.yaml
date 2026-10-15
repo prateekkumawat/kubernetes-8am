@@ -1,0 +1,80 @@
+# iscsi driver setup 
+# https://github.com/kubernetes-csi/csi-driver-iscsi/blob/master/docs/install-csi-driver-master.md
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: static
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: iscsiplugin-pv
+  labels:
+    name: data-iscsiplugin
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  csi:
+    driver: iscsi.csi.k8s.io
+    volumeHandle: iscsi-data-id
+    volumeAttributes:
+      targetPortal: "172.31.4.169:3260"
+      portals: "[]"
+      iqn: "iqn.2026-10.com.example:storage1"
+      iscsiInterface: "default"
+      discovery: "true"
+      discoveryCHAPAuth: "false"
+      sessionCHAPAuth: "false"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: iscsiplugin-pvc
+  namespace: static
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  selector:
+    matchExpressions:
+      - key: name
+        operator: In
+        values: ["data-iscsiplugin"]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: storage-data-iscsi
+  namespace: static
+spec:
+  selector:
+    matchLabels:
+      app: storage-data-iscsi
+  template:
+    metadata:
+      labels:
+        app: storage-data-iscsi
+    spec:
+      volumes:
+      - name: data-vols
+        persistentVolumeClaim:
+          claimName: iscsiplugin-pvc
+      containers:
+      - name: storage-data-iscsi
+        image: ubuntu:latest
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        command:
+          - sleep
+          - "3600"
+        volumeMounts:
+        - name: data-vols
+          mountPath: /opt
+        
