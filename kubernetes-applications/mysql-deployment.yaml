@@ -85,7 +85,7 @@ spec:
           valueFrom: 
             secretKeyRef: 
               name: mysql-user-creds
-              key: password
+              key: userpassword
         - name: MYSQL_DATABASE
           value: kubedata
         volumeMounts:
