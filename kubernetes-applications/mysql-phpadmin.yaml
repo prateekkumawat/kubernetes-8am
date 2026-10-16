@@ -39,6 +39,7 @@ metadata:
 spec:
   selector:
     app: mysql-pma
+  type: NodePort  
   ports:
   - port: 80
     targetPort: 80
