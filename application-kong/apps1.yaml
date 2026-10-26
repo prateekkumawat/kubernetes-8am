@@ -53,6 +53,7 @@ metadata:
     konghq.com/strip-path: "true"
     konghq.com/protocols: "http"
 spec:
+  ingressClassName: kong
   rules:
   - host: apps1.apps.ocelottraining.com
     http:
