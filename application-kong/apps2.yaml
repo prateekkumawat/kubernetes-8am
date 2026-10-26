@@ -1,0 +1,69 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: apps2
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apps2
+  namespace: apps2
+spec:
+  selector:
+    matchLabels:
+      app: apps2
+  template:
+    metadata:
+      labels:
+        app: apps2
+    spec:
+      containers:
+      - name: apps2
+        image: prateekkumawat/villa:novepay
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: apps2-svc
+  namespace: apps2
+spec:
+  selector:
+    app: apps2
+  ports:
+  - port: 80
+    targetPort: 80
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: apps2-ingress
+  labels:
+    app: apps2
+  namespace: apps2  
+  annotations:
+    konghq.com/strip-path: "true"
+    konghq.com/protocols: "http"
+spec:
+  ingressClassName: kong
+  rules:
+  - host: apps2.apps.ocelottraining.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: apps2-svc
+            port: 
+              number: 80
+
+
