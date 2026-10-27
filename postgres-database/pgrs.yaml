@@ -54,9 +54,12 @@ spec:
           envFrom:
             - secretRef:
                 name: postgres-admin-creds
+          env:
+          - name: PGDATA
+            value: /var/lib/postgresql/data/pgdata      
           volumeMounts:
             - name: postgres-data
-              mountPath: /var/lib/postgresql/data
+              mountPath: /var/lib/postgresql/
           resources:
             requests:
               cpu: 250m
