@@ -48,6 +48,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: pusle-api-app-svc
+  namespace: pulse-backend
 spec:
   selector:
     app: apiapp
@@ -55,3 +56,4 @@ spec:
   - port: 80
     targetPort: 8080
     name: http
+  type: NodePort  
