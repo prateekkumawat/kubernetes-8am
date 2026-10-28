@@ -56,4 +56,28 @@ spec:
   - port: 80
     targetPort: 8080
     name: http
-  type: NodePort  
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pulse-ui-ingress
+  labels:
+    app: apiapp
+  namespace: pulse-backend
+  annotations:
+    konghq.com/strip-path: "true"
+    konghq.com/protocols: "http"
+spec:
+  ingressClassName: kong
+  rules:
+  - host: api.apps.ocelottraining.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: pusle-api-app-svc
+            port: 
+              number: 80
