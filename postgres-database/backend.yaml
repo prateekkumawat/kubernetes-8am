@@ -91,3 +91,38 @@ spec:
             name: pulse-api-app-svc
             port: 
               number: 80
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pulse-ui-ingress
+  labels:
+    app: apiapp
+  namespace: pulse-backend
+  annotations:
+    konghq.com/strip-path: "true"
+    konghq.com/protocols: "http"
+spec:
+  ingressClassName: kong
+  rules:
+  - host: swagger.apps.ocelottraining.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: pulse-api-app-svc
+            port: 
+              number: 80
+  - host: swagger.apps.ocelottraining.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: /api
+        backend:
+          service:
+            name: pulse-api-app-svc
+            port: 
+              number: 80
