@@ -35,7 +35,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: pusle-ui-svc
+  name: pulse-ui-svc
   namespace: pulse-ui
 spec:
   selector:

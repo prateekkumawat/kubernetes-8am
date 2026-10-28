@@ -47,7 +47,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: pusle-api-app-svc
+  name: pulse-api-app-svc
   namespace: pulse-backend
 spec:
   selector:
@@ -78,6 +78,6 @@ spec:
         path: "/"
         backend:
           service:
-            name: pusle-api-app-svc
+            name: pulse-api-app-svc
             port: 
               number: 80
