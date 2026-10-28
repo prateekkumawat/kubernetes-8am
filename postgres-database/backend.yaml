@@ -81,3 +81,13 @@ spec:
             name: pulse-api-app-svc
             port: 
               number: 80
+  - host: api.apps.ocelottraining.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: /api
+        backend:
+          service:
+            name: pulse-api-app-svc
+            port: 
+              number: 80
