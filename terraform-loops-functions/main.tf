@@ -1,42 +1,34 @@
 # resource "aws_instance" "this" {
-#    count         = 3
-#    instance_type = "t2.micro"
+#    for_each     = var.instance_sets
+#    instance_type = each.value
 #    ami           = "ami-0f19324397f53458f"
 #    tags = {
-#      Name    = "ec2-${count.index + 1}"
+#      Name    = "ec2"
 #      created = "Terraform"
 #      Team    = "Devops"
 #      Costtag = "stage"
 #    }
 # }
 
-# selection resources create or skip 
-resource "aws_instance" "this" {
-   count         = var.create_ec2_instance ? 1 : 0
-   instance_type = "t2.micro"
-   ami           = "ami-0f19324397f53458f"
+resource "aws_instance" "this2" {
+   for_each     = { for inst in var.instance_map : inst.instnace_name => inst }
+   instance_type = each.value.instance_type
+   ami           = each.value.ami
    tags = {
-     Name    = "ec2-${count.index + 1}"
+     Name    = each.key
      created = "Terraform"
      Team    = "Devops"
-     Costtag = "stage"
+     Costtag = each.value.env
    }
 }
 
-resource "aws_vpc" "this" {
-  count               = var.vpc_create ? 1 : 0
-  cidr_block          = "10.100.0.0/16"
-  instance_tenancy    = "default"
-    tags    = {
-        Name    = "vpc-${count.index + 1}"
-        created = "Terraform"
-        Team    = "Devops"
-        Costtag = "stage"
+output "instance_ids" {
+  value = {
+    for k, v in aws_instance.this2 : k => {
+      id  = v.id 
+      public_ip = v.public_ip
+      private_ip = v.private_ip
+      name = v.tags["Name"]
     }
-}
-
-resource "aws_instance" "this1" {
-   count         = length(var.instances)
-   instance_type = var.instances[count.index].instance_type
-   ami           = var.instances[count.index].ami
+  }  
 }

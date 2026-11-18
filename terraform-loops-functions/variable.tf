@@ -23,3 +23,31 @@ variable "instances" {
  },
  ]
 }
+
+variable "instance_sets" {
+  type        = set(string)
+  default     = ["t2.micro", "t3.micro"]
+}
+
+variable "instance_map" {
+  type        = list(object({
+    instance_type = string
+    ami = string
+    env = string
+    instnace_name = string
+  }))
+  default = [
+  {
+    instance_type = "t2.micro"
+    ami = "ami-0f19324397f53458f"
+    env = "stage"
+    instnace_name = "hsit-stage-ins"
+  },
+  {
+    instance_type = "t3.micro"
+    ami = "ami-0f19324397f53458f"
+    env = "prod"
+    instnace_name = "hsit-prod-ins"
+  }
+  ]
+}
