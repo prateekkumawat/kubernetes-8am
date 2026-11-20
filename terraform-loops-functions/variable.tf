@@ -51,3 +51,15 @@ variable "instance_map" {
   }
   ]
 }
+
+
+variable "vpc_id" {
+  default = "vpc-0d9737cda3a9bfe33"
+}
+
+variable "subnet1_id" {
+  default = "subnet-02a53ccb3553830e8"
+}
+variable "subnet2_id" {
+  default = "subnet-0abd81bd82e402b80"
+}
