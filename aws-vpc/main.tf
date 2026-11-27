@@ -16,6 +16,8 @@ resource "aws_subnet" "public_subnet" {
     availability_zone       =    each.value.availability_zone
     map_public_ip_on_launch =    each.value.map_public_ip_on_launch
     tags                    =    merge({ "Name" = each.key }, var.tags) 
+
+    depends_on              =    [ aws_vpc.this ]
 }
 
 
@@ -27,6 +29,8 @@ resource "aws_subnet" "private_subnet" {
     availability_zone       =    each.value.availability_zone
     map_public_ip_on_launch =    each.value.map_public_ip_on_launch
     tags                    =    merge({ "Name" = each.key }, var.tags) 
+
+    depends_on              =    [ aws_vpc.this ]
 }
 
 resource "aws_subnet" "ds_subnet" {
@@ -37,6 +41,8 @@ resource "aws_subnet" "ds_subnet" {
     availability_zone       =    each.value.availability_zone
     map_public_ip_on_launch =    each.value.map_public_ip_on_launch
     tags                    =    merge({ "Name" = each.key }, var.tags) 
+
+    depends_on              =    [ aws_vpc.this ]
 }
 
 
@@ -45,5 +51,46 @@ resource "aws_internet_gateway" "this" {
     
     vpc_id                  =     aws_vpc.this[each.value.vpc_id].id
     tags                    =     merge({ "Name" = each.key }, var.tags)
+}
 
+resource "aws_eip" "this" {
+  
+    for_each                =   var.nat_eip_enable ? { for k in var.nat_eip_details : k.name => k } : {}
+
+    domain                  =   "vpc"
+    tags                    =    merge({ "Name" = each.key }, var.tags)
+    
+}
+
+resource "aws_nat_gateway" "this" {
+    for_each                =   var.nat_gateway_enable ? { for k in var.nat_gateway_details : k.name => k } : {}
+
+    allocation_id           =   each.value.eip_allocation_id
+    subnet_id               =   aws_subnet.public_subnet[each.value.subnet_id].id
+    tags                    =   merge({ "Name" = each.key }, var.tags)   
+}
+
+resource "aws_route_table" "rt" {
+
+  for_each = {
+    for rt in var.route_tables : rt.name => rt
+  }
+
+  vpc_id = aws_vpc.this[each.value.vpc_id].id
+
+  route {
+    cidr_block = each.value.cidr_block
+
+    gateway_id = (
+      each.value.gateway_id != null
+      ? aws_internet_gateway.this[each.value.gateway_id].id
+      : null
+    )
+
+    nat_gateway_id = (
+      each.value.nat_gateway_id != null
+      ? aws_nat_gateway.this[each.value.nat_gateway_id].id
+      : null
+    )
+  }
 }

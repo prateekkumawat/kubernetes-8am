@@ -22,7 +22,7 @@ variable "tags" {
 
 variable "vpc_create" {
   type = bool
-  default = false
+  default = true
 }
 
 variable "vpc_details" {
@@ -46,7 +46,7 @@ variable "vpc_details" {
 
 variable "public_subnets_create" {
   type = bool
-  default = false
+  default = true
 }
 
 variable "public_subnets_details" {
@@ -70,7 +70,7 @@ variable "public_subnets_details" {
 
 variable "private_subnets_create" {
   type = bool
-  default = false
+  default = true
 }
 
 variable "private_subnets_details" {
@@ -122,7 +122,7 @@ variable "internet_gateway_create" {
 }
 
 variable "internet_gateway_details" {
-  type = list(string({
+  type = list(object({
     name = string
     vpc_id = string
   }))
@@ -132,5 +132,80 @@ variable "internet_gateway_details" {
             vpc_id = "hsit-stage"
         }
      ]
+}
+
+variable "nat_eip_enable" {
+  type = bool 
+  default = true
+}
+
+variable "nat_eip_details" {
+  type = list(object({
+     name = string
+  }))
+  default = [ 
+    {
+      name = "hsit-stage-nat-eip"
+    }
+   ]
+}
+
+variable "nat_gateway_enable" {
+  type = bool 
+  default = true
+}
+
+variable "nat_gateway_details" {
+  type = list(object({
+     name = string
+     subnet_id = string
+     eip_allocation_id = string
+  }))
+  default = [ 
+    {
+      name = "hsit-stage-nat-gateway"
+      subnet_id = "hsit-stage-pub-az1-subnet1"
+      eip_allocation_id = "hsit-stage-nat-eip"
+    }
+   ]
+}
+
+variable "route_tables" {
+  type = list(object({
+    name           = string
+    vpc_id         = string
+    cidr_block     = optional(string, "0.0.0.0/0")
+    gateway_id     = optional(string, null)
+    nat_gateway_id = optional(string, null)
+  }))
+
+  default = [
+    {
+      name       = "hsit-stage-public"
+      vpc_id     = "hsit-stage"
+      gateway_id = "hsit-stage-igw"
+    },
+    {
+      name           = "hsit-stage-private"
+      vpc_id         = "hsit-stage"
+      nat_gateway_id = "hsit-stage-nat-gateway"
+    }
+  ]
+}
+
+variable "subnet_assosiate" {
+  type = list(object({
+    route_table_name = string
+    subnet_id        = list(string)
+  }))
+  default = [{
+    route_table_name = "hsit-stage-public"
+    subnet_id        = ["hsit-stage-pub-az1-subnet1"]
+    },
+    {
+      route_table_name = "hsit-stage-private"
+      subnet_id        = ["hsit-stage-priv-az1-subnet1"]
+    },
+  ]
 }
 
